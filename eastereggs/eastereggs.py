@@ -1,17 +1,12 @@
 import random
-import discord
 from discord.ext import commands
-
 
 class EasterEggs:
 	"""Easter Eggs"""
 	
 	def __init__(self, bot):
 		self.bot = bot
-
-	def get_display_name(self, member):
-		return member.nick if member.nick else str(member.name)
-
+	
 	@commands.command(pass_context=True)
 	async def excuse(self, ctx):
 		excuses = [
@@ -23,7 +18,7 @@ class EasterEggs:
 			'{} accidentally got on a plane. ✈️', 
 		]
 		await self.bot.send_typing(ctx.message.channel)
-		await self.bot.say(random.choice(excuses).format(self.get_display_name(ctx.message.author)))
-		
+		await self.bot.say(random.choice(excuses).format(ctx.message.author.display_name))
+
 def setup(bot):
-    bot.add_cog(EasterEggs(bot))
+	bot.add_cog(EasterEggs(bot))
