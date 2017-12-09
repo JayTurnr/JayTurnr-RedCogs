@@ -1,0 +1,10 @@
+{
+    "AUTHOR" : "JayTurnr",
+    "DESCRIPTION" : "Raid Tagging for EKPogo Servers",
+    "NAME" : "Tagger",
+    "REQUIREMENTS" : [],
+    "TAGS" : [
+        "raids",
+        "pokemon",
+    ]
+}
