@@ -8,9 +8,10 @@ class Tagger:
 	def __init__(self, bot):
 		self.bot = bot
 		self.approved_roles = ('ivysaur','charmeleon','wartortle','metapod','cloyster','tentacruel','sandslash','magneton','marowak','machamp','alakazam','omastar','gengar','scyther','ninetales','porygon','tyranitar','snorlax','golem','lapras','poliwrath','nidoking','nidoqueen','mewtwo','ho-oh','lugia','entei','raikou','zapdos','moltres','celebi','mew','articuno','suicune','absol','mawile','margate','broadstairs','ramsgate','canterbury','hernebay','whitstable','sandwich','ashford', 'groudon', 'wailmer', 'kyogre', 'aggron', 'exraidgyms')
-		THANET_EXR_LOCS = ['Tribal Fields','Birchington Play Area', 'The Shelter', 'George V. Silver Jubilee Memorial', 'Margate Lawn Tennis Club', 'One Day a Woodland', 'Millmead Road Childrens Adventure Playground', 'Cliftonville Library at Northdown Park', 'Thanet Wanderers RUFC', 'Pierremont Park Water Fountain','Thanet Colts Football Club', 'Newington Play', 'Ellington Park Bandstand', 'Manufacture of Innovative Medicines', 'Water Reservoir', 'The Waterfall', 'Edward Welby Pugin', 'Granville Lion', 'Winterstoke Gardens']
+		THANET_EXR_LOCS = ['Tribal Fields','Birchington Play Area', 'The Shelter', 'George V. Silver Jubilee Memorial', 'Margate Lawn Tennis Club', 'One Day a Woodland', 'Millmead Road Childrens Adventure Playground', 'Cliftonville Library at Northdown Park', 'Thanet Wanderers RUFC', 'Pierremont Park Water Fountain', 'Newington Play', 'Ellington Park Bandstand', 'Manufacture of Innovative Medicines', 'Water Reservoir', 'The Waterfall', 'Edward Welby Pugin', 'Granville Lion', 'Winterstoke Gardens']
 		HB_WHIT_EXR_LOCS = ['Reculver 2000 Statue', 'Reculver Country Park Board', 'Avenue of Remembrance', 'Tankerton Skate Park']
 		self.exrgyms = THANET_EXR_LOCS + HB_WHIT_EXR_LOCS
+		self.ekpogo_watched = ('George V. Silver Jubilee Memorial', 'Ellington Park Bandstand')
 	
 	@commands.command(pass_context=True)
 	async def subscribe(self, ctx, species):
@@ -91,8 +92,8 @@ class Tagger:
 			if raid['Gym'] in self.exrgyms:
 				exrrole = await self.find_role(message.server, 'ExRaidGyms')
 				new_message += '\n'+exrrole.mention
-				#if str(message.server.id) == '319811219093716993':
-				#	await self.bot.send_message(self.bot.get_channel('405404234083991562'), new_message)
+				if raid['Gym'] in self.ekpogo_watched:
+					await self.bot.send_message(self.bot.get_channel('405404234083991562'), new_message)
 			await self.bot.send_message(message.channel, new_message)
 
 def setup(bot):
