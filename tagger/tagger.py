@@ -7,7 +7,14 @@ class Tagger:
 	
 	def __init__(self, bot):
 		self.bot = bot
-		self.approved_roles = ('ivysaur','charmeleon','wartortle','metapod','cloyster','tentacruel','sandslash','magneton','marowak','machamp','alakazam','omastar','gengar','scyther','ninetales','porygon','tyranitar','snorlax','golem','lapras','poliwrath','nidoking','nidoqueen','mewtwo','ho-oh','lugia','entei','raikou','zapdos','moltres','celebi','mew','articuno','suicune','absol','mawile','margate','broadstairs','ramsgate','canterbury','hernebay','whitstable','sandwich','ashford', 'groudon', 'wailmer', 'kyogre', 'aggron', 'exraidgyms')
+		self.tier_1 = ['Ivysaur', 'Charmeleon', 'Wartortle', 'Magikarp', 'Wailmer', 'Swablu', 'Snorunt']
+		self.tier_2 = ['Sandslash', 'Tentacruel', 'Magneton', 'Dewgong', 'Cloyster', 'Marowak', 'Sableye', 'Mawile']
+		self.tier_3 = ['Ninetales', 'Alakazam', 'Machamp', 'Gengar', 'Scyther', 'Jynx', 'Porygon', 'Omastar', 'Azumarill', 'Piloswine']
+		self.tier_4 = ['Nidoqueen', 'Nidoking', 'Poliwrath', 'Victreebel', 'Golem', 'Lapras', 'Snorlax', 'Feraligatr', 'Tyranitar', 'Aggron', 'Absol']
+		self.tier_5 = ['Articuno', 'Zapdos', 'Moltres', 'Mewtwo', 'Mew', 'Raikou', 'Entei', 'Suicune', 'Lugia', 'Ho-Oh', 'Celebi', 'Kyogre', 'Groudon', 'Rayquaza']
+		self.extra = ['margate','broadstairs','ramsgate','canterbury','hernebay','whitstable','sandwich','ashford', 'exraidgyms']
+		self.removed_roles = ['metapod']
+		self.approved_roles = self.tier_1 + self.tier_2 + self.tier_3 + self.tier_4 + self.tier_5 + self.extra
 		THANET_EXR_LOCS = ['Tribal Fields','Birchington Play Area', 'The Shelter', 'George V. Silver Jubilee Memorial', 'Margate Lawn Tennis Club', 'One Day a Woodland', 'Millmead Road Childrens Adventure Playground', 'Cliftonville Library at Northdown Park', 'Thanet Wanderers RUFC', 'Pierremont Park Water Fountain', 'Newington Play', 'Ellington Park Bandstand', 'Manufacture of Innovative Medicines', 'Water Reservoir', 'The Waterfall', 'Edward Welby Pugin', 'Granville Lion', 'Winterstoke Gardens']
 		HB_WHIT_EXR_LOCS = ['Reculver 2000 Statue', 'Reculver Country Park Board', 'Avenue of Remembrance', 'Tankerton Skate Park']
 		self.exrgyms = THANET_EXR_LOCS + HB_WHIT_EXR_LOCS
@@ -16,7 +23,7 @@ class Tagger:
 	@commands.command(pass_context=True)
 	async def subscribe(self, ctx, species):
 		role = None
-		if species.lower() in self.approved_roles:
+		if species.lower() in (role.lower() for role in self.approved_roles):
 			role = await self.find_role(ctx.message.server, species)
 		if role is None:
 			await self.bot.say("I couldn't find {}. Are you sure it's a valid role?".format(species.capitalize()))
@@ -37,7 +44,6 @@ class Tagger:
 		if role is None:
 			await self.bot.say("I couldn't find {}. Are you sure it's a valid role?".format(species.capitalize()))
 			return
-		
 		try:
 			await self.bot.remove_roles(ctx.message.author, role)
 		except discord.errors.Forbidden:
@@ -48,9 +54,10 @@ class Tagger:
 	
 	@commands.command(pass_context=True, no_pm=True)
 	@checks.mod_or_permissions(assign_roles=True)
-	async def add_role(self, ctx, species):
-		role = await self.find_role(ctx.message.server, species, create=True)
-		await self.bot.say("Role {} enabled.".format(role.mention))
+	async def update_roles(self, ctx):
+		for role in self.approved_roles:
+			await self.find_role(ctx.message.server, role, create=True)
+		await self.bot.say("Done")
 	
 	@commands.command(pass_context=True, no_pm=True)
 	@checks.mod_or_permissions(assign_roles=True)
@@ -63,7 +70,7 @@ class Tagger:
 		
 		role = discord.utils.find(lambda x: x.name.lower() == role_name.lower(), server.roles)
 		if not role and create == True:
-			role = await self.bot.create_role(server, name__lower=role_name.lower(), mentionable=True)
+			role = await self.bot.create_role(server, name=role_name, mentionable=True)
 		if role:
 			return role
 		else:
