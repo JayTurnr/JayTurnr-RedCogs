@@ -15,10 +15,10 @@ class Tagger:
 		self.extra = ['margate','broadstairs','ramsgate','canterbury','hernebay','whitstable','sandwich','ashford', 'exraidgyms']
 		self.removed_roles = ['metapod']
 		self.approved_roles = self.tier_1 + self.tier_2 + self.tier_3 + self.tier_4 + self.tier_5 + self.extra
-		THANET_EXR_LOCS = ['Tribal Fields','Birchington Play Area', 'The Shelter', 'George V. Silver Jubilee Memorial', 'Margate Lawn Tennis Club', 'One Day a Woodland', 'Millmead Road Childrens Adventure Playground', 'Cliftonville Library at Northdown Park', 'Thanet Wanderers RUFC', 'Pierremont Park Water Fountain', 'Newington Play', 'Ellington Park Bandstand', 'Manufacture of Innovative Medicines', 'Water Reservoir', 'The Waterfall', 'Edward Welby Pugin', 'Granville Lion', 'Winterstoke Gardens']
+		THANET_EXR_LOCS = ['Tribal Fields','Birchington Play Area', 'The Shelter', 'Millmead Road Childrens Adventure Playground', 'Cliftonville Library at Northdown Park', 'Thanet Wanderers RUFC', 'Pierremont Park Water Fountain', 'Newington Play', 'Ellington Park Bandstand', 'Manufacture of Innovative Medicines', 'Water Reservoir', 'The Waterfall', 'Edward Welby Pugin', 'Winterstoke Gardens']
 		HB_WHIT_EXR_LOCS = ['Reculver 2000 Statue', 'Reculver Country Park Board', 'Avenue of Remembrance', 'Tankerton Skate Park']
 		self.exrgyms = THANET_EXR_LOCS + HB_WHIT_EXR_LOCS
-		self.ekpogo_watched = ('George V. Silver Jubilee Memorial', 'Ellington Park Bandstand')
+		self.ekpogo_watched = ('The Shelter', 'Millmead Road Childrens Adventure Playground', 'Cliftonville Library at Northdown Park', 'Ellington Park Bandstand',  'Edward Welby Pugin')
 	
 	@commands.command(pass_context=True)
 	async def subscribe(self, ctx, species):
