@@ -102,6 +102,21 @@ class Tagger:
 				if raid['Gym'] in self.ekpogo_watched:
 					await self.bot.send_message(self.bot.get_channel('405404234083991562'), new_message)
 			await self.bot.send_message(message.channel, new_message)
+		elif message.channel.name == 'raids' and message.author.name == 'Egg':
+			raid = {}
+			raid['url'] = message.embeds[0]['url']
+			raid['hatch'] = message.embeds[0]['description'].splitlines()[0].split(' ')[7]
+			for l in message.embeds[0]['description'].splitlines()[1:]:
+				k, v = l.split(':')
+				raid[k] = v.lstrip()
+			raid['level'] = message.embeds[0]['title'].split(' ')[1]
+			if raid['Gym'] in self.ekpogo_watched:
+				exrrole = await self.find_role(message.server, 'ExRaidGyms')
+				new_message = 'Level '+raid['level']+' egg'
+				new_message += ' @ '+raid['Gym']
+				new_message += ', expected to hatch at '+raid['hatch']
+				new_message += '\n'+exrrole.mention
+				await self.bot.send_message(self.bot.get_channel('405404234083991562'), new_message)
 
 def setup(bot):
 	n = Tagger(bot)
