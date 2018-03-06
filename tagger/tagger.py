@@ -7,10 +7,10 @@ class Tagger:
 	
 	def __init__(self, bot):
 		self.bot = bot
-		self.tier_1 = ['Ivysaur', 'Charmeleon', 'Wartortle', 'Magikarp', 'Wailmer', 'Swablu', 'Snorunt']
-		self.tier_2 = ['Sandslash', 'Tentacruel', 'Magneton', 'Dewgong', 'Cloyster', 'Marowak', 'Sableye', 'Mawile']
-		self.tier_3 = ['Ninetales', 'Alakazam', 'Machamp', 'Gengar', 'Scyther', 'Jynx', 'Porygon', 'Omastar', 'Azumarill', 'Piloswine']
-		self.tier_4 = ['Nidoqueen', 'Nidoking', 'Poliwrath', 'Victreebel', 'Golem', 'Lapras', 'Snorlax', 'Feraligatr', 'Tyranitar', 'Aggron', 'Absol']
+		self.tier_1 = ['Magikarp', 'Wailmer', 'Swablu', 'Snorunt']
+		self.tier_2 = ['Slowbro', 'Exeggutor', 'Sableye', 'Mawile']
+		self.tier_3 = ['Alakazam', 'Machamp', 'Starmie', 'Scyther', 'Aerodactyl', 'Claydol']
+		self.tier_4 = ['Charizard', 'Tyranitar', 'Aggron', 'Absol']
 		self.tier_5 = ['Articuno', 'Zapdos', 'Moltres', 'Mewtwo', 'Mew', 'Raikou', 'Entei', 'Suicune', 'Lugia', 'Ho-Oh', 'Celebi', 'Kyogre', 'Groudon', 'Rayquaza']
 		self.extra = ['margate','broadstairs','ramsgate','canterbury','hernebay','whitstable','sandwich','ashford', 'exraidgyms']
 		self.removed_roles = ['metapod']
