@@ -8,12 +8,11 @@ class Tagger:
 	def __init__(self, bot):
 		self.bot = bot
 		self.tier_1 = ['Magikarp', 'Wailmer', 'Swablu', 'Snorunt']
-		self.tier_2 = ['Slowbro', 'Exeggutor', 'Sableye', 'Mawile']
-		self.tier_3 = ['Alakazam', 'Machamp', 'Starmie', 'Scyther', 'Aerodactyl', 'Claydol']
-		self.tier_4 = ['Charizard', 'Tyranitar', 'Aggron', 'Absol']
+		self.tier_2 = ['Slowbro', 'Exeggutor', 'Sableye', 'Mawile', 'Manectric']
+		self.tier_3 = ['Machamp', 'Gengar', 'Jynx', 'Jolteon', 'Piloswine']
+		self.tier_4 = ['Golem', 'Tyranitar', 'Aggron', 'Absol']
 		self.tier_5 = ['Articuno', 'Zapdos', 'Moltres', 'Mewtwo', 'Mew', 'Raikou', 'Entei', 'Suicune', 'Lugia', 'Ho-Oh', 'Celebi', 'Kyogre', 'Groudon', 'Rayquaza']
-		self.extra = ['margate','broadstairs','ramsgate','canterbury','hernebay','whitstable','sandwich','ashford', 'exraidgyms']
-		self.removed_roles = ['metapod']
+		self.extra = ['margate','broadstairs','ramsgate','canterbury','hernebay','whitstable','sandwich','ashford', 'exraidgyms', 'raidtrain']
 		self.approved_roles = self.tier_1 + self.tier_2 + self.tier_3 + self.tier_4 + self.tier_5 + self.extra
 		THANET_EXR_LOCS = ['Tribal Fields','Birchington Play Area', 'The Shelter', 'Millmead Road Childrens Adventure Playground', 'Cliftonville Library at Northdown Park', 'Thanet Wanderers RUFC', 'Pierremont Park Water Fountain', 'Newington Play', 'Ellington Park Bandstand', 'Manufacture of Innovative Medicines', 'Water Reservoir', 'The Waterfall', 'Edward Welby Pugin', 'Winterstoke Gardens']
 		HB_WHIT_EXR_LOCS = ['Reculver 2000 Statue', 'Reculver Country Park Board', 'Avenue of Remembrance', 'Tankerton Skate Park']
@@ -39,11 +38,12 @@ class Tagger:
 	
 	@commands.command(pass_context=True)
 	async def unsubscribe(self, ctx, species):
-		if species.lower() in self.approved_roles:
+		if species.lower() in (role.lower() for role in self.approved_roles):
 			role = await self.find_role(ctx.message.server, species)
 		if role is None:
 			await self.bot.say("I couldn't find {}. Are you sure it's a valid role?".format(species.capitalize()))
 			return
+		
 		try:
 			await self.bot.remove_roles(ctx.message.author, role)
 		except discord.errors.Forbidden:
@@ -77,46 +77,38 @@ class Tagger:
 			return None
 	
 	async def tags(self, message):
-		if message.channel.name == 'raids' and (int(message.author.discriminator) == 0 and message.author.bot == True and message.author.name != 'Egg'):
-			role = await self.find_role(message.server, message.author.name.split(' ')[0])
+		if message.channel.name == 'raids' and (int(message.author.id) == 422735322057801729 and message.author.bot == True):
 			raid = {}
+			raid['pokemon'] = message.embeds[0]['title'].split(' ')[-1].lstrip()
+			monster_role = await self.find_role(message.server, raid['pokemon'])
 			raid['url'] = message.embeds[0]['url']
 			for l in message.embeds[0]['description'].splitlines():
-				if len(l.split(':')) == 1:
+				if l.split(':')[0] == 'Moveset':
 					raid['fast_move'], raid['charge_move'] = l.split(' / ')
-				elif len(l.split(':')) == 3:
-					raid['end_time'] = l.split(' ')[3].lstrip()
-				else:
+				elif len(l.split(':')) == 3 and l.split(' ')[1] == 'until':
+					raid['end_time'] = l.split(' ')[2].lstrip()
+				elif l.split(' ')[0].replace("**", "") == 'Gym':
+					raid['Gym'] = l.split(':')[1].replace("**", "").lstrip().rsplit(' ', 1)[0]
+				elif len(l.split(':')) == 2:
 					k, v = l.split(':')
-					raid[k] = v.lstrip()
+					raid[k.replace("**", " ").lstrip()] = v.replace("**", " ").lstrip()
+			print(raid)
 			try:
-				new_message = role.mention
+				print(monster_role.mention)
+				new_message = monster_role.mention
+				print(raid['Area'])
+				town_role = await self.find_role(message.server, raid['Area'])
 			except AttributeError:
-				new_message = message.author.name.split(' ')[0]
-			new_message += ' '+raid['Gym']
-			new_message += ' '+raid['end_time']
-			new_message += '\n'+raid['url']
+				return
+			new_message += 'at '+raid['Gym']
+			new_message += 'at '+raid['end_time']
+			new_message += '\n'+town_role.mention
 			if raid['Gym'] in self.exrgyms:
 				exrrole = await self.find_role(message.server, 'ExRaidGyms')
 				new_message += '\n'+exrrole.mention
 				if raid['Gym'] in self.ekpogo_watched:
 					await self.bot.send_message(self.bot.get_channel('405404234083991562'), new_message)
 			await self.bot.send_message(message.channel, new_message)
-		elif message.channel.name == 'raids' and message.author.name == 'Egg':
-			raid = {}
-			raid['url'] = message.embeds[0]['url']
-			raid['hatch'] = message.embeds[0]['description'].splitlines()[0].split(' ')[7]
-			for l in message.embeds[0]['description'].splitlines()[1:]:
-				k, v = l.split(':')
-				raid[k] = v.lstrip()
-			raid['level'] = message.embeds[0]['title'].split(' ')[1]
-			if raid['Gym'] in self.ekpogo_watched:
-				exrrole = await self.find_role(message.server, 'ExRaidGyms')
-				new_message = 'Level '+raid['level']+' egg'
-				new_message += ' @ '+raid['Gym']
-				new_message += ', expected to hatch at '+raid['hatch']
-				new_message += '\n'+exrrole.mention
-				await self.bot.send_message(self.bot.get_channel('405404234083991562'), new_message)
 
 def setup(bot):
 	n = Tagger(bot)
