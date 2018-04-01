@@ -12,7 +12,7 @@ class Tagger:
 		self.tier_3 = ['Machamp', 'Gengar', 'Jynx', 'Jolteon', 'Piloswine']
 		self.tier_4 = ['Golem', 'Tyranitar', 'Aggron', 'Absol']
 		self.tier_5 = ['Articuno', 'Zapdos', 'Moltres', 'Mewtwo', 'Mew', 'Raikou', 'Entei', 'Suicune', 'Lugia', 'Ho-Oh', 'Celebi', 'Kyogre', 'Groudon', 'Rayquaza']
-		self.extra = ['margate','broadstairs','ramsgate','canterbury','hernebay','whitstable','sandwich','ashford', 'exraidgyms', 'raidtrain']
+		self.extra = ['margate','broadstairs','ramsgate','canterbury','hernebay','whitstable','sandwich','ashford', 'exraidgyms', 'raidtrain', 'Ditto', 'Ghosts', 'Magikarp']
 		self.approved_roles = self.tier_1 + self.tier_2 + self.tier_3 + self.tier_4 + self.tier_5 + self.extra
 		THANET_EXR_LOCS = ['Tribal Fields','Birchington Play Area', 'The Shelter', 'Millmead Road Childrens Adventure Playground', 'Cliftonville Library at Northdown Park', 'Thanet Wanderers RUFC', 'Pierremont Park Water Fountain', 'Newington Play', 'Ellington Park Bandstand', 'Manufacture of Innovative Medicines', 'Water Reservoir', 'The Waterfall', 'Edward Welby Pugin', 'Winterstoke Gardens']
 		HB_WHIT_EXR_LOCS = ['Reculver 2000 Statue', 'Reculver Country Park Board', 'Avenue of Remembrance', 'Tankerton Skate Park']
